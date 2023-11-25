@@ -1,0 +1,30 @@
+version: "3"
+networks:
+    apinetwork:
+
+services:
+    mysql:
+        image: mysql/mysql-server:5.7
+        container_name: mysql
+        environment:
+            - MYSQL_RANDOM_ROOT_PASSWORD=yes
+            - MYSQL_DATABASE=microblog
+            - MYSQL_USER=microblog
+            - MYSQL_PASSWORD=12345
+        networks:
+            apinetwork:
+        restart: always
+
+    microblog:
+        image: sharifen/microblog:1.0.0-prod
+        container_name: clientserver
+        environment:
+            - SECRET_KEY=my-secret-key
+            - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
+        ports:
+            - "8000:5000"
+        links:
+            - mysql:dbserver
+        networks:
+            apinetwork:
+        restart: always
