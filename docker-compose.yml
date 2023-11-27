@@ -3,6 +3,24 @@ networks:
     apinetwork:
 
 services:
+    microblog:
+        image: prod
+        build:
+            context: .
+            dockerfile: docker/Dockerfile_prod
+        depends_on:
+            - mysql
+        environment:
+            - SECRET_KEY=my-secret-key
+            - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
+        ports:
+            - "8000:5000"
+        links:
+            - mysql:dbserver
+        networks:
+            apinetwork:
+        restart: always
+
     mysql:
         image: mysql/mysql-server:5.7
         container_name: mysql
@@ -15,16 +33,14 @@ services:
             apinetwork:
         restart: always
 
-    microblog:
-        image: sharifen/microblog:1.0.0-prod
-        container_name: clientserver
-        environment:
-            - SECRET_KEY=my-secret-key
-            - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
-        ports:
-            - "8000:5000"
-        links:
-            - mysql:dbserver
-        networks:
-            apinetwork:
-        restart: always
+    test:
+        image: test
+        build:
+            context: .
+            dockerfile: docker/Dockerfile_test
+        volumes:
+            - ./app:/microblog/app
+            - ./tests:/microblog/tests
+        depends_on:
+            - mysql
+        command: ["./test_startup.sh"]
