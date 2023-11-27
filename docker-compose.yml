@@ -1,22 +1,22 @@
 version: "3"
 
 services:
-    microblog:
+    prod:
         image: prod
         build:
             context: .
             dockerfile: docker/Dockerfile_prod
         depends_on:
-            - mysql
+            - dbserver
         environment:
             - SECRET_KEY=my-secret-key
             - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
         ports:
             - "8000:5000"
         links:
-            - mysql:dbserver
+            - dbserver:dbserver
 
-    mysql:
+    dbserver:
         image: mysql/mysql-server:5.7
         container_name: mysql
         ports:
@@ -39,7 +39,7 @@ services:
             - ./app:/microblog/app
             - ./tests:/microblog/tests
         depends_on:
-            - mysql
+            - dbserver
         command: ["./test_startup.sh"]
 
 volumes:
