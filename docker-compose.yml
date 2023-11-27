@@ -1,6 +1,4 @@
 version: "3"
-networks:
-    apinetwork:
 
 services:
     microblog:
@@ -17,21 +15,20 @@ services:
             - "8000:5000"
         links:
             - mysql:dbserver
-        networks:
-            apinetwork:
-        restart: always
 
     mysql:
         image: mysql/mysql-server:5.7
         container_name: mysql
+        ports:
+            - "3306:3306"
         environment:
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
             - MYSQL_DATABASE=microblog
             - MYSQL_USER=microblog
             - MYSQL_PASSWORD=12345
-        networks:
-            apinetwork:
-        restart: always
+        volumes:
+            - db_data:/var/lib/mysql
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
     test:
         image: test
@@ -44,3 +41,6 @@ services:
         depends_on:
             - mysql
         command: ["./test_startup.sh"]
+
+volumes:
+    db_data:
