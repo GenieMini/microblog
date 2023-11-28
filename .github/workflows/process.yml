@@ -1,0 +1,21 @@
+name: CI/CD
+
+on:
+  release:
+    types: [created]
+  
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+  dockerpush:
+    uses: ./.github/workflows/dockerpush.yml
+    needs: ci
+    secrets: inherit
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ci, dockerpush]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
