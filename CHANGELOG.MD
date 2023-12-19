@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.1.1 [Release]
+
+#### features
+You can now follow users on the website.
+Database was updated to account for this.
+
 ## Version 0.1.0
 
 first titled version.
