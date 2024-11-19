@@ -1,45 +1,45 @@
 version: "3"
 
 services:
-    prod:
-        image: prod
-        build:
-            context: .
-            dockerfile: docker/Dockerfile_prod
-        depends_on:
-            - dbserver
-        environment:
-            - SECRET_KEY=my-secret-key
-            - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
-        ports:
-            - "8000:5000"
-        links:
-            - dbserver:dbserver
+  prod:
+    image: prod
+    build:
+      context: .
+      dockerfile: docker/Dockerfile_prod
+    depends_on:
+      - dbserver
+    environment:
+      - SECRET_KEY=my-secret-key
+      - DATABASE_URL=mysql+pymysql://microblog:12345@dbserver/microblog
+    ports:
+      - "8000:5000"
+    links:
+      - dbserver:dbserver
 
-    dbserver:
-        image: mysql/mysql-server:5.7
-        container_name: mysql
-        ports:
-            - "3306:3306"
-        environment:
-            - MYSQL_RANDOM_ROOT_PASSWORD=yes
-            - MYSQL_DATABASE=microblog
-            - MYSQL_USER=microblog
-            - MYSQL_PASSWORD=12345
-        volumes:
-            - db_data:/var/lib/mysql
+  dbserver:
+    image: mysql/mysql-server:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=microblog
+      - MYSQL_USER=microblog
+      - MYSQL_PASSWORD=12345
+    volumes:
+      - db_data:/var/lib/mysql
 
-    test:
-        image: test
-        build:
-            context: .
-            dockerfile: docker/Dockerfile_test
-        volumes:
-            - ./app:/microblog/app
-            - ./tests:/microblog/tests
-        depends_on:
-            - dbserver
-        command: ["./test_startup.sh"]
+  test:
+    image: test
+    build:
+      context: .
+      dockerfile: docker/Dockerfile_test
+    volumes:
+      - ./app:/microblog/app
+      - ./tests:/microblog/tests
+    depends_on:
+      - dbserver
+    command: ["./run_make_test.sh"]
 
 volumes:
-    db_data:
+  db_data:

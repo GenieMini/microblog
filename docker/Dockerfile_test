@@ -4,15 +4,15 @@ FROM python:3.8
 # Set the working directory
 WORKDIR /microblog
 
-COPY . .
-# Copy both prod.txt and test.txt
-COPY requirements/prod.txt requirements/test.txt /
+COPY requirements/prod.txt ./
+COPY requirements/test.txt ./
+COPY run_make_test.sh ./
+COPY Makefile ./
+COPY .pylintrc ./
+COPY pytest.ini ./
 
 # Install dependencies from test.txt
-RUN pip install -r /test.txt
-
-# Copy the test_startup.sh script into the container
-COPY test_startup.sh /test_startup.sh
+RUN pip install --no-cache-dir -r test.txt
 
 # Make the script executable
-RUN chmod +x /test_startup.sh
+RUN chmod +x run_make_test.sh
