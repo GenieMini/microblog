@@ -1,2 +1,6 @@
 [local]
 localhost ansible_connection=local
+
+[appserver]
+appserver1.sharifmicroblog.tech ansible_user=deploy
+appserver2.sharifmicroblog.tech ansible_user=deploy

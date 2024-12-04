@@ -1,6 +1,10 @@
 ---
 packages:
-    -   fail2ban
-    -   tmux
-    -   git
-    -   unattended-upgrades
+  - fail2ban
+  - tmux
+  - git
+  - unattended-upgrades
+
+users_users:
+  - user: Sharif
+    key: "../files/azure_sharif.pub"
